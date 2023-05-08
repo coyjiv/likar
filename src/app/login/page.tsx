@@ -8,7 +8,7 @@ type Props = {}
 
 const LoginPage = (props: Props) => {
   return (
-    <Box display={'flex'} h={'100vh'} className={'justify-center py-52 bg-animation-gradient'}><LoginForm/></Box>
+    <div className={'flex h-screen py-0 sm:py-44 items-center justify-center bg-animation-gradient'}><LoginForm/></div>
   )
 }
 

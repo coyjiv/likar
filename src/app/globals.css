@@ -6,6 +6,8 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;
+  
 }
 
 @media (prefers-color-scheme: dark) {
@@ -18,10 +20,36 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
+  /* background: linear-gradient(
       to bottom,
       transparent,
       rgb(var(--background-end-rgb))
     )
-    rgb(var(--background-start-rgb));
+    rgb(var(--background-start-rgb)); */
+}
+
+.bg-animation-gradient{
+  background: linear-gradient(268deg, #15b0e5, #1570e5, #4d15e5);
+  background-size: 600% 600%;
+
+  -webkit-animation: backGroundAnimation 13s ease infinite;
+  -moz-animation: backGroundAnimation 13s ease infinite;
+  animation: backGroundAnimation 13s ease infinite;
+}
+
+
+@-webkit-keyframes backGroundAnimation {
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+@-moz-keyframes backGroundAnimation {
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+@keyframes backGroundAnimation {
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
 }

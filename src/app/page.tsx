@@ -19,7 +19,11 @@ function Home() {
   return (
     <main className="flex min-h-screen items-center justify-between">
       <NavbarSimpleColored />
+     {
+       currentUser?.username &&
+      //  @ts-ignore
       <Walkthrough open={isModalOpened} />
+     } 
       <div>test</div>
     </main>
   );

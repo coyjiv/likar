@@ -1,25 +1,42 @@
 'use client'
 
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
-import { firebaseReducer, reactReduxFirebase } from 'react-redux-firebase'
-import { firestoreReducer, reduxFirestore } from 'redux-firestore'
+import { firebaseReducer } from 'react-redux-firebase'
+import { firestoreReducer } from 'redux-firestore'
+
+import { persistStore, persistReducer } from 'redux-persist'
+import hardSet from 'redux-persist/lib/stateReconciler/hardSet'
+import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
+
+const persistConfig = {
+    key: 'root',
+    storage,
+  }
+
+const rootReducer = combineReducers({
+    // Add sync reducers here
+    firebase: persistReducer(
+      { key: 'firebaseState', storage, stateReconciler: hardSet },
+      firebaseReducer
+    ),
+    firestore: persistReducer(
+        { key: 'firestoreState', storage, stateReconciler: hardSet },
+        firestoreReducer
+      )
+  })
+
+const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export const store = configureStore({
-  reducer: {
-    firebase: firebaseReducer,
-    firestore: firestoreReducer,
-  },
+  reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
     }),
-  // enhancers: [
-  //     reduxFirestore(firebase, firebaseConfig),
-  //     reactReduxFirebase(firebase, rrfConfig),
-  //   ],
 })
+
+export const persistor = persistStore(store)
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
-
 

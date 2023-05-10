@@ -89,18 +89,16 @@ const useStyles = createStyles((theme) => ({
 }));
 
 const data = [
-  { link: "", label: "Notifications", icon: "" },
-  { link: "", label: "Billing", icon: "" },
-  { link: "", label: "Security", icon: "" },
-  { link: "", label: "SSH Keys", icon: "" },
-  { link: "", label: "Databases", icon: "" },
-  { link: "", label: "Authentication", icon: "" },
-  { link: "", label: "Other Settings", icon: "" },
+  { link: '', label: 'Ваші візити', icon: "" },
+  { link: '', label: 'Ваші направлення', icon: "" },
+  { link: '', label: 'Результати аналізів', icon: "" },
+  { link: '', label: 'Чат', icon: "" },
+  { link: '', label: 'Налаштування', icon: "" },
 ];
 
 export function NavbarSimpleColored() {
   const { classes, cx } = useStyles();
-  const [active, setActive] = useState("Billing");
+  const [active, setActive] = useState('Ваші візити');
 
   const links = data.map((item) => (
     <a
@@ -132,22 +130,9 @@ export function NavbarSimpleColored() {
       </Navbar.Section>
 
       <Navbar.Section className={classes.footer}>
-        <a
-          href="#"
-          className={classes.link}
-          onClick={(event) => event.preventDefault()}
-        >
-          {/* <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} /> */}
-          <span>Change account</span>
-        </a>
-
-        <a
-          href="#"
-          className={classes.link}
-          onClick={(event) => auth.signOut()}
-        >
+        <a href="#" className={classes.link} onClick={(event) => auth.signOut()}>
           {/* <IconLogout className={classes.linkIcon} stroke={1.5} /> */}
-          <span>Logout</span>
+          <span>Вийти з аккаунту</span>
         </a>
       </Navbar.Section>
     </Navbar>

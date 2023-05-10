@@ -52,7 +52,7 @@ const LoginForm = (props: Props) => {
     }, [auth, router])
 
   return (
-    <Paper mah={'300px'} radius="md" p="xl" withBorder>
+    <Paper radius="md" p="xl" className='max-h-[400px] max-w-[80%] sm:w-full sm:mx-20 lg:mx-40 lg:max-w-lg' withBorder {...props}>
       <Text size="lg" weight={500}>
         Вітаємо, щоб продовжити увійдіть у систему
       </Text>
@@ -74,8 +74,8 @@ const LoginForm = (props: Props) => {
 
           <PasswordInput
             required
-            label="Password"
-            placeholder="Your password"
+            label="Пароль"
+            placeholder="Ваш пароль"
             value={form.values.password}
             onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
             error={form.errors.password && 'Password should include at least 6 characters'}

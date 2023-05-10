@@ -2,12 +2,13 @@
 
 import { Provider } from 'react-redux'
 import { ReactReduxFirebaseProvider } from 'react-redux-firebase'
-import { store } from '.'
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
-import 'firebase/compat/firestore';
+import { store, persistor } from '.'
+import firebase from 'firebase/compat/app'
+import 'firebase/compat/auth'
+import 'firebase/compat/firestore'
 import { createFirestoreInstance } from 'redux-firestore'
-import { getAuth, initializeAuth } from 'firebase/auth'
+import { getAuth } from 'firebase/auth'
+import { PersistGate } from 'redux-persist/integration/react'
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -28,7 +29,8 @@ const rrfConfig = {
 
 // Initialize Firebase
 export const firebaseInstance = firebase.initializeApp(firebaseConfig)
-export const auth = initializeAuth(firebaseInstance)
+// export const auth = initializeAuth(firebaseInstance)
+export const auth = getAuth(firebaseInstance)
 // const analytics = getAnalytics(app);
 
 const rrfProps = {
@@ -36,14 +38,17 @@ const rrfProps = {
   config: rrfConfig,
   dispatch: store.dispatch,
   createFirestoreInstance,
+  auth,
 }
 
 export function Providers({ children }: any) {
   return (
     <Provider store={store}>
-      <ReactReduxFirebaseProvider {...rrfProps}>
-        {children}
-      </ReactReduxFirebaseProvider>
+      <PersistGate loading={null} persistor={persistor}>
+        <ReactReduxFirebaseProvider {...rrfProps}>
+          {children}
+        </ReactReduxFirebaseProvider>
+      </PersistGate>
     </Provider>
   )
 }

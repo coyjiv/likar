@@ -50,7 +50,7 @@ const RegisterForm = (props: Props) => {
     }, [auth, router])
 
   return (
-    <Paper radius="md" p="xl" withBorder {...props}>
+    <Paper radius="md" p="xl" className='max-h-[400px] sm:w-full sm:mx-20 lg:mx-40 lg:max-w-lg' withBorder {...props}>
       <Text size="lg" weight={500}>
         Реєстрація
       </Text>

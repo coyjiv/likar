@@ -5,7 +5,7 @@ type Props = {}
 
 const RegisterPage = (props: Props) => {
   return (
-    <div className='flex h-screen py-44 justify-center bg-animation-gradient'><RegisterForm/></div>
+    <div className='flex h-screen py-0 sm:py-44 items-center justify-center bg-animation-gradient'><RegisterForm/></div>
   )
 }
 

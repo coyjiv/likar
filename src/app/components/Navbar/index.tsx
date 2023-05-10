@@ -1,15 +1,26 @@
-import { useState } from 'react';
-import { createStyles, Navbar, Group, Code, getStylesRef, rem } from '@mantine/core';
-import { auth } from '@/app/store/provider';
+import { useState } from "react";
+import {
+  createStyles,
+  Navbar,
+  Group,
+  Code,
+  getStylesRef,
+  rem,
+} from "@mantine/core";
+import { auth } from "@/app/store/provider";
 
 const useStyles = createStyles((theme) => ({
   navbar: {
-    backgroundColor: theme.fn.variant({ variant: 'filled', color: theme.primaryColor }).background,
+    backgroundColor: theme.fn.variant({
+      variant: "filled",
+      color: theme.primaryColor,
+    }).background,
   },
 
   version: {
     backgroundColor: theme.fn.lighten(
-      theme.fn.variant({ variant: 'filled', color: theme.primaryColor }).background!,
+      theme.fn.variant({ variant: "filled", color: theme.primaryColor })
+        .background!,
       0.1
     ),
     color: theme.white,
@@ -20,7 +31,8 @@ const useStyles = createStyles((theme) => ({
     paddingBottom: theme.spacing.md,
     marginBottom: `calc(${theme.spacing.md} * 1.5)`,
     borderBottom: `${rem(1)} solid ${theme.fn.lighten(
-      theme.fn.variant({ variant: 'filled', color: theme.primaryColor }).background!,
+      theme.fn.variant({ variant: "filled", color: theme.primaryColor })
+        .background!,
       0.1
     )}`,
   },
@@ -29,44 +41,47 @@ const useStyles = createStyles((theme) => ({
     paddingTop: theme.spacing.md,
     marginTop: theme.spacing.md,
     borderTop: `${rem(1)} solid ${theme.fn.lighten(
-      theme.fn.variant({ variant: 'filled', color: theme.primaryColor }).background!,
+      theme.fn.variant({ variant: "filled", color: theme.primaryColor })
+        .background!,
       0.1
     )}`,
   },
 
   link: {
     ...theme.fn.focusStyles(),
-    display: 'flex',
-    alignItems: 'center',
-    textDecoration: 'none',
+    display: "flex",
+    alignItems: "center",
+    textDecoration: "none",
     fontSize: theme.fontSizes.sm,
     color: theme.white,
     padding: `${theme.spacing.xs} ${theme.spacing.sm}`,
     borderRadius: theme.radius.sm,
     fontWeight: 500,
 
-    '&:hover': {
+    "&:hover": {
       backgroundColor: theme.fn.lighten(
-        theme.fn.variant({ variant: 'filled', color: theme.primaryColor }).background!,
+        theme.fn.variant({ variant: "filled", color: theme.primaryColor })
+          .background!,
         0.1
       ),
     },
   },
 
   linkIcon: {
-    ref: getStylesRef('icon'),
+    ref: getStylesRef("icon"),
     color: theme.white,
     opacity: 0.75,
     marginRight: theme.spacing.sm,
   },
 
   linkActive: {
-    '&, &:hover': {
+    "&, &:hover": {
       backgroundColor: theme.fn.lighten(
-        theme.fn.variant({ variant: 'filled', color: theme.primaryColor }).background!,
+        theme.fn.variant({ variant: "filled", color: theme.primaryColor })
+          .background!,
         0.15
       ),
-      [`& .${getStylesRef('icon')}`]: {
+      [`& .${getStylesRef("icon")}`]: {
         opacity: 0.9,
       },
     },
@@ -87,7 +102,9 @@ export function NavbarSimpleColored() {
 
   const links = data.map((item) => (
     <a
-      className={cx(classes.link, { [classes.linkActive]: item.label === active })}
+      className={cx(classes.link, {
+        [classes.linkActive]: item.label === active,
+      })}
       href={item.link}
       key={item.label}
       onClick={(event) => {
@@ -95,16 +112,20 @@ export function NavbarSimpleColored() {
         setActive(item.label);
       }}
     >
-
       <span>{item.label}</span>
     </a>
   ));
 
   return (
-    <Navbar height={'100vh'} width={{ sm: 300 }} p="md" className={classes.navbar}>
+    <Navbar
+      zIndex={100}
+      height={"100vh"}
+      width={{ sm: 300 }}
+      p="md"
+      className={classes.navbar}
+    >
       <Navbar.Section grow>
-        <Group className={classes.header} position="apart">
-        </Group>
+        <Group className={classes.header} position="apart"></Group>
         {links}
       </Navbar.Section>
 

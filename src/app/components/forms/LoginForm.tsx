@@ -74,8 +74,8 @@ const LoginForm = (props: Props) => {
 
           <PasswordInput
             required
-            label="Password"
-            placeholder="Your password"
+            label="Пароль"
+            placeholder="Ваш пароль"
             value={form.values.password}
             onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
             error={form.errors.password && 'Password should include at least 6 characters'}

@@ -21,7 +21,6 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 }
 
-console.log(firebaseConfig)
 
 const rrfConfig = {
   userProfile: 'users',

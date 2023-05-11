@@ -40,7 +40,6 @@ const ProfileForm = (props: Props) => {
     },
   })
 
-  console.log(file)
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {

@@ -1,4 +1,5 @@
 'use client';
+import withAuth from '@/hooks/withAuth';
 import { Box, Avatar, createStyles } from '@mantine/core';
 import React from 'react'
 import withApplicationShell from '../components/AppShell'
@@ -21,4 +22,4 @@ const Profile = (props: Props) => {
   )
 }
 
-export default withApplicationShell(Profile) 
+export default withAuth(withApplicationShell(Profile))  

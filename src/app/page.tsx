@@ -11,7 +11,6 @@ function Home() {
   const [isModalOpened, toggleModal] = useState(
     Boolean(!currentUser.assignedDoctor)
   );
-  console.log(currentUser.currentDoctor);
   return (
     <main className="flex min-h-screen items-center justify-between">
      {

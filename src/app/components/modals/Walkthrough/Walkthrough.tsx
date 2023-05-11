@@ -39,6 +39,7 @@ const Walkthrough = memo(function Walkthought({
   open,
   close: closeModal,
 }: Props) {
+  //@ts-ignore
   const uid = useAppSelector((state) => state.firebase.auth.uid)
   const auth = getAuth()
   const firebase = useFirebase()
@@ -54,7 +55,9 @@ const Walkthrough = memo(function Walkthought({
   const [file, setFile] = useState<File>();
 
   const firestore = useFirestore()
+  //@ts-ignore
   const profile = useAppSelector((state) => state.firebase.profile)
+  //@ts-ignore
   const doctors = useAppSelector((state) => state.firestore.data.doctors)
   const doctorsArray = useMemo(() => Object.values(doctors || {}), [doctors])
   console.log(doctorsArray)
@@ -358,6 +361,7 @@ const Walkthrough = memo(function Walkthought({
 export default compose(
   firestoreConnect(() => ['doctors']),
   connect((state: RootState) => ({
+    // @ts-ignore
     doctors: state.firestore.data.doctors,
   }))
 )(Walkthrough)

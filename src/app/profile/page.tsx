@@ -16,6 +16,7 @@ const styles = createStyles((theme) => ({
 
 const Profile = (props: Props) => {
   return (
+    //@ts-ignore
         <ProfileForm/>
   )
 }

@@ -106,6 +106,7 @@ export function NavbarSimpleColored() {
   
   const { classes, cx } = useStyles();
   const [active, setActive] = useState(data.find(item=>item.link===pathname)?.label ?? '');
+  //@ts-ignore
   const profile = useAppSelector(state=>state.firebase.profile)
 
   const links = data.map((item) => (

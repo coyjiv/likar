@@ -3,6 +3,7 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
 import { firebaseReducer } from 'react-redux-firebase'
 import { firestoreReducer } from 'redux-firestore'
+import { PersistPartial } from 'redux-persist/es/persistReducer';
 
 import { persistStore, persistReducer } from 'redux-persist'
 import hardSet from 'redux-persist/lib/stateReconciler/hardSet'
@@ -37,6 +38,6 @@ export const store = configureStore({
 
 export const persistor = persistStore(store)
 
-export type RootState = ReturnType<typeof store.getState>
+export type RootState = ReturnType<typeof store.getState> & PersistPartial
 export type AppDispatch = typeof store.dispatch
 

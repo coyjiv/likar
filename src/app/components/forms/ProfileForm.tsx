@@ -1,7 +1,11 @@
 import React, { ChangeEvent, useMemo, useState } from 'react'
 import { useForm } from '@mantine/form'
 import { Avatar, Select, TextInput } from '@mantine/core'
-import { firestoreConnect, useFirebase, useFirestore } from 'react-redux-firebase'
+import {
+  firestoreConnect,
+  useFirebase,
+  useFirestore,
+} from 'react-redux-firebase'
 import { connect } from 'react-redux'
 import { compose } from '@reduxjs/toolkit'
 import { RootState } from '@/app/store'
@@ -14,12 +18,16 @@ const ProfileForm = (props: Props) => {
   const firestore = useFirestore()
   const firebase = useFirebase()
   const auth = getAuth()
+  //@ts-ignore
   const uid = useAppSelector((state) => state.firebase.auth.uid)
+  //@ts-ignore
   const profile = useAppSelector((state) => state.firebase.profile)
+  //@ts-ignore
+
   const doctors = useAppSelector((state) => state.firestore.data.doctors)
   const doctorsArray = useMemo(() => Object.values(doctors || {}), [doctors])
   const fileInputRef = React.useRef<HTMLInputElement>(null)
-  const [file, setFile] = useState<File>();
+  const [file, setFile] = useState<File>()
   const form = useForm({
     initialValues: {
       firstName: profile.firstName,
@@ -32,13 +40,13 @@ const ProfileForm = (props: Props) => {
     },
   })
 
-  console.log(file);
-  
+  console.log(file)
+
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setFile(e.target.files[0]);
+      setFile(e.target.files[0])
     }
-  };
+  }
 
   async function updateUserProfile(values: any) {
     return await firestore
@@ -47,19 +55,21 @@ const ProfileForm = (props: Props) => {
       .set(values, { merge: true })
   }
   return (
-    <form onSubmit={form.onSubmit(
-      (values, _event) => {
-        try {
-          updateUserProfile(values)
-
-        } catch (error) {
-          console.error('Error updating profile: ', error)
+    <form
+      onSubmit={form.onSubmit(
+        (values, _event) => {
+          try {
+            updateUserProfile(values)
+          } catch (error) {
+            console.error('Error updating profile: ', error)
+          }
+        },
+        (validationErrors, _values, _event) => {
+          console.log(validationErrors)
         }
-      },
-      (validationErrors, _values, _event) => {
-        console.log(validationErrors)
-      }
-    )} className='pl-5'>
+      )}
+      className='pl-5'
+    >
       <div className='mt-10 space-y-12 sm:space-y-3'>
         <div>
           <h2 className='text-base font-semibold leading-7 text-gray-900'>
@@ -81,7 +91,11 @@ const ProfileForm = (props: Props) => {
               </label>
               <div className='mt-2 sm:col-span-2 sm:mt-0'>
                 <div className='flex items-center gap-x-3'>
-                  <Avatar src={file && URL.createObjectURL(file)} size={40} radius='xl' />
+                  <Avatar
+                    src={file && URL.createObjectURL(file)}
+                    size={40}
+                    radius='xl'
+                  />
                   <button
                     type='button'
                     className='rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50'
@@ -89,31 +103,41 @@ const ProfileForm = (props: Props) => {
                   >
                     Змінити
                   </button>
-                  {file && 
-                  <>
-                    <button
-                      type='button'
-                      className='rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50'
-                      onClick={() => {
-                        firebase.uploadFile(`avatars/${uid}`, file).then((res) => {
-                          res.uploadTaskSnapshot.ref.getDownloadURL().then((downloadURL) => {
-                            updateUserProfile({avatarUrl: downloadURL})
-                            setFile(undefined)
-                          });
-                        })
-                      }}
-                    >
-                      Зберегти
-                    </button>
-                    <button
-                      type='button'
-                      className='rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50'
-                      onClick={() => setFile(undefined)}
-                    >
-                      Скинути
-                    </button>
-                  </>}
-                  <input onChange={handleFileChange} ref={fileInputRef} type='file' className='hidden' />
+                  {file && (
+                    <>
+                      <button
+                        type='button'
+                        className='rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50'
+                        onClick={() => {
+                          firebase
+                            .uploadFile(`avatars/${uid}`, file)
+                            .then((res) => {
+                              res.uploadTaskSnapshot.ref
+                                .getDownloadURL()
+                                .then((downloadURL) => {
+                                  updateUserProfile({ avatarUrl: downloadURL })
+                                  setFile(undefined)
+                                })
+                            })
+                        }}
+                      >
+                        Зберегти
+                      </button>
+                      <button
+                        type='button'
+                        className='rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50'
+                        onClick={() => setFile(undefined)}
+                      >
+                        Скинути
+                      </button>
+                    </>
+                  )}
+                  <input
+                    onChange={handleFileChange}
+                    ref={fileInputRef}
+                    type='file'
+                    className='hidden'
+                  />
                 </div>
               </div>
             </div>
@@ -292,6 +316,7 @@ const ProfileForm = (props: Props) => {
 export default compose(
   firestoreConnect(() => ['doctors']),
   connect((state: RootState) => ({
+    //@ts-ignore
     doctors: state.firestore.data.doctors,
   }))
 )(ProfileForm)

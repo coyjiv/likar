@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo, useState } from 'react'
+import React, { ChangeEvent, memo, useEffect, useMemo, useState } from 'react'
 import { useDisclosure } from '@mantine/hooks'
 import {
   Modal,
@@ -19,21 +19,54 @@ import { useAppSelector } from '@/hooks/redux'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { RootState } from '@/app/store'
-import { getAuth, onAuthStateChanged, sendEmailVerification, updateProfile } from 'firebase/auth'
+import {
+  getAuth,
+  onAuthStateChanged,
+  reload,
+  sendEmailVerification,
+  updateProfile,
+} from 'firebase/auth'
 import { useFirestore } from 'react-redux-firebase'
+import Lottie from 'lottie-react'
+import confirmation from '@/assets/lottie/confirmation.json'
 
 type Props = {
   open: boolean
+  close: () => void
 }
 
-const Walkthrough = memo(function Walkthought({ open }: Props) {
-  const auth = getAuth();
-  const [isEmailVerified, setEmailVerified] = useState(auth.currentUser?.emailVerified)
-  const firestore = useFirestore();
+const Walkthrough = memo(function Walkthought({
+  open,
+  close: closeModal,
+}: Props) {
+  const uid = useAppSelector((state) => state.firebase.auth.uid)
+  const auth = getAuth()
+  const firebase = useFirebase()
+  const [isEmailVerified, setEmailVerified] = useState(
+    auth.currentUser?.emailVerified
+  )
+  const fileInputRef = React.useRef<HTMLInputElement>(null)
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFile(e.target.files[0]);
+    }
+  };
+  const [file, setFile] = useState<File>();
+
+  const firestore = useFirestore()
   const profile = useAppSelector((state) => state.firebase.profile)
   const doctors = useAppSelector((state) => state.firestore.data.doctors)
   const doctorsArray = useMemo(() => Object.values(doctors || {}), [doctors])
   console.log(doctorsArray)
+
+  const checkEmailVerification = async () => {
+    if (auth.currentUser) {
+      await reload(auth.currentUser) // This doesn't cause a full page reload, just refreshes the auth token.
+      const isEmailVerified = auth.currentUser.emailVerified
+      console.log('Email verification status: ', isEmailVerified)
+      setEmailVerified(isEmailVerified) // Assuming setEmailVerified updates a state variable.
+    }
+  }
 
   const [opened, { close }] = useDisclosure(false)
   const form = useForm({
@@ -55,28 +88,27 @@ const Walkthrough = memo(function Walkthought({ open }: Props) {
       sex: (value) => (value.length < 2 ? 'Оберіть свою стать' : null),
       dOB: (value) =>
         /-?\d+(\.\d+)?/.test(value) ? null : 'Виберіть дату народження',
-      assignedDoctor: (value) =>
-        value ? null: 'Оберіть лікаря',
+      assignedDoctor: (value) => (value ? null : 'Оберіть лікаря'),
     },
   })
-  
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         if (user.emailVerified) {
-          console.log('User email is verified');
+          console.log('User email is verified')
           setEmailVerified(true)
         }
       }
-    });
-  
+    })
+
     // Clean up the observer when the component unmounts
     return () => {
-      unsubscribe();
-    };
-  }, [auth]);
+      unsubscribe()
+    }
+  }, [auth])
 
-  const [active, setActive] = useState(profile?.lastName?1:0)
+  const [active, setActive] = useState(profile?.lastName ? 1 : 0)
   const [highestStepVisited, setHighestStepVisited] = useState(active)
 
   const handleStepChange = (nextStep: number) => {
@@ -91,7 +123,10 @@ const Walkthrough = memo(function Walkthought({ open }: Props) {
   }
 
   async function updateUserProfile(values: any) {
-    return await firestore.collection('users').doc(auth?.currentUser?.uid).set(values, { merge: true })
+    return await firestore
+      .collection('users')
+      .doc(auth?.currentUser?.uid)
+      .set(values, { merge: true })
   }
 
   return (
@@ -104,9 +139,12 @@ const Walkthrough = memo(function Walkthought({ open }: Props) {
         }}
         size={'auto'}
         opened={open}
-        onClose={close}
+        onClose={() => {
+          closeModal()
+          close()
+        }}
         title='Вітаємо!'
-        withCloseButton={false}
+        withCloseButton={active === 2}
       >
         <>
           <Stepper mt={10} active={active} breakpoint='sm'>
@@ -117,19 +155,21 @@ const Walkthrough = memo(function Walkthought({ open }: Props) {
               <Box mx='auto'>
                 <form
                   onSubmit={form.onSubmit(
-                     (values, _event) => { 
+                    (values, _event) => {
                       try {
                         updateUserProfile(values)
-                        if (auth?.currentUser) sendEmailVerification(auth?.currentUser)
+                        if (auth?.currentUser)
+                          sendEmailVerification(auth?.currentUser)
 
                         handleStepChange(active + 1)
                       } catch (error) {
-                        console.error('Error updating profile: ', error);
-                        
+                        console.error('Error updating profile: ', error)
                       }
-                     },
-                    (validationErrors, _values, _event) => { console.log(validationErrors) }
-                )}
+                    },
+                    (validationErrors, _values, _event) => {
+                      console.log(validationErrors)
+                    }
+                  )}
                   className='flex flex-col gap-2'
                 >
                   <TextInput
@@ -148,14 +188,24 @@ const Walkthrough = memo(function Walkthought({ open }: Props) {
                     name='sex'
                     {...form.getInputProps('sex')}
                     my='sm'
-                    classNames={{error:'mt-2'}}
+                    classNames={{ error: 'mt-2' }}
                     label='Оберіть стать'
                     description='Нажаль, їх існує тільки дві'
                     withAsterisk
                   >
                     <Group mt='xs'>
-                      <Radio {...form.getInputProps('sex')} classNames={{error:'hidden'}} value='Чоловік' label='Чоловік' />
-                      <Radio {...form.getInputProps('sex')} classNames={{error:'hidden'}} value='Жінка' label='Жінка' />
+                      <Radio
+                        {...form.getInputProps('sex')}
+                        classNames={{ error: 'hidden' }}
+                        value='Чоловік'
+                        label='Чоловік'
+                      />
+                      <Radio
+                        {...form.getInputProps('sex')}
+                        classNames={{ error: 'hidden' }}
+                        value='Жінка'
+                        label='Жінка'
+                      />
                     </Group>
                   </Radio.Group>
                   <TextInput
@@ -177,7 +227,7 @@ const Walkthrough = memo(function Walkthought({ open }: Props) {
                     withAsterisk
                     placeholder='Почніть вводити ФІО лікаря щоб знайти його в базі даних'
                     data={doctorsArray.map(
-                      (doctor:any, i) => ({
+                      (doctor: any, i) => ({
                         value: doctor.id,
                         label: `${doctor.lastName} ${doctor.firstName} ${doctor.middleName}`,
                       }),
@@ -188,7 +238,7 @@ const Walkthrough = memo(function Walkthought({ open }: Props) {
                     maxDropdownHeight={280}
                   />
                   <Group position='right' mt='md'>
-                    <Button className='bg-black' type='submit'>
+                    <Button className='bg-[#3d8fd9]' type='submit'>
                       Далі
                     </Button>
                   </Group>
@@ -196,13 +246,83 @@ const Walkthrough = memo(function Walkthought({ open }: Props) {
               </Box>
             </Stepper.Step>
             <Stepper.Step label='Другий крок' description='Підтвердіть email'>
-              <h1 className='underline cursor-pointer' onClick={()=>{
-                if (auth?.currentUser) sendEmailVerification(auth?.currentUser)
-              }}>Step 2 content: Verify email</h1>
-              {(isEmailVerified || auth?.currentUser?.emailVerified) && <h1>Ви верифіковані!</h1>}
+              <div className='flex flex-col items-center justify-center'>
+                {isEmailVerified || auth?.currentUser?.emailVerified ? (
+                  <div className='my-10 flex flex-col items-center justify-center gap-4'>
+                    <h1 className='font-medium'>Ви верифіковані!</h1>
+                    <div className='w-10 '>
+                      <Lottie animationData={confirmation} loop={false} />
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <h1 className='font-medium text-center my-10'>
+                      Підтвердіть email
+                    </h1>
+                    <h5>
+                      Відкрийте вашу пошту та перейдіть за посиланням для верифікації, а потім натисніть <span onClick={()=>checkEmailVerification()} className='underline font-medium cursor-pointer'>сюди</span>
+                    </h5>
+                    <h4
+                      className='cursor-pointer text-sm text-slate-400'
+                      onClick={() => {
+                        if (auth?.currentUser)
+                          sendEmailVerification(auth?.currentUser)
+                      }}
+                    >
+                      Не прийшов емейл?{' '}
+                      <span className='underline'>Надіслати ще раз</span>
+                    </h4>
+                  </div>
+                )}
+              </div>
             </Stepper.Step>
             <Stepper.Step label='Фінальний крок' description='Додайте аватар'>
               <h1>Додайте аватар</h1>
+              <div className=' sm:grid sm:grid-cols-3 xl:grid-cols-4 sm:items-center sm:gap-4 sm:py-6'>
+              <label
+                htmlFor='photo'
+                className='block text-sm font-medium leading-6 text-gray-900'
+              >
+                Аватар
+              </label>
+              <div className='mt-2 sm:col-span-2 sm:mt-0'>
+                <div className='flex items-center gap-x-3'>
+                  <Avatar src={file && URL.createObjectURL(file)} size={40} radius='xl' />
+                  <button
+                    type='button'
+                    className='rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50'
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    Змінити
+                  </button>
+                  {file && 
+                  <>
+                    <button
+                      type='button'
+                      className='rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50'
+                      onClick={() => {
+                        firebase.uploadFile(`avatars/${uid}`, file).then((res) => {
+                          res.uploadTaskSnapshot.ref.getDownloadURL().then((downloadURL) => {
+                            updateUserProfile({avatarUrl: downloadURL})
+                            setFile(undefined)
+                          });
+                        })
+                      }}
+                    >
+                      Зберегти
+                    </button>
+                    <button
+                      type='button'
+                      className='rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50'
+                      onClick={() => setFile(undefined)}
+                    >
+                      Скинути
+                    </button>
+                  </>}
+                  <input onChange={handleFileChange} ref={fileInputRef} type='file' className='hidden' />
+                </div>
+              </div>
+            </div>
             </Stepper.Step>
 
             <Stepper.Completed>
@@ -210,15 +330,23 @@ const Walkthrough = memo(function Walkthought({ open }: Props) {
             </Stepper.Completed>
           </Stepper>
 
-          <Group position='center' mt='xl'>
+          <Group
+            display={active !== 0 ? 'flex' : 'none'}
+            position='center'
+            mt='xl'
+          >
             <Button
               variant='default'
+              disabled={active === 1}
               onClick={() => handleStepChange(active - 1)}
             >
-              Back
+              Назад
             </Button>
-            <Button onClick={() => handleStepChange(active + 1)}>
-              Next step
+            <Button
+              className='bg-[#3d8fd9]'
+              onClick={() => active === 2? closeModal() : handleStepChange(active + 1)}
+            >
+              {active===2? 'Закінчити' : 'Далі'}
             </Button>
           </Group>
         </>

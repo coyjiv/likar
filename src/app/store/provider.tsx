@@ -6,6 +6,7 @@ import { store, persistor } from '.'
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/auth'
 import 'firebase/compat/firestore'
+import 'firebase/compat/storage'
 import { createFirestoreInstance } from 'redux-firestore'
 import { getAuth } from 'firebase/auth'
 import { PersistGate } from 'redux-persist/integration/react'
@@ -31,6 +32,7 @@ const rrfConfig = {
 export const firebaseInstance = firebase.initializeApp(firebaseConfig)
 // export const auth = initializeAuth(firebaseInstance)
 export const auth = getAuth(firebaseInstance)
+export const storage = firebase.storage()
 // const analytics = getAnalytics(app);
 
 const rrfProps = {
@@ -39,6 +41,7 @@ const rrfProps = {
   dispatch: store.dispatch,
   createFirestoreInstance,
   auth,
+  storage
 }
 
 export function Providers({ children }: any) {

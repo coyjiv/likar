@@ -1,16 +1,12 @@
 "use client";
 
 import withAuth from "@/hooks/withAuth";
-import Image from "next/image";
-import { NavbarSimpleColored } from "./components/Navbar";
-import { RootState } from "./store";
-import { useDispatch } from "react-redux";
-import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { useAppSelector } from "@/hooks/redux";
 import Walkthrough from "./components/modals/Walkthrough/Walkthrough";
 import { useState } from "react";
+import withApplicationShell from "./components/AppShell";
 
 function Home() {
-  const dispatch = useDispatch();
   const currentUser = useAppSelector((state) => state.firebase.profile);
   const [isModalOpened, toggleModal] = useState(
     Boolean(!currentUser.assignedDoctor)
@@ -18,15 +14,14 @@ function Home() {
   console.log(currentUser.currentDoctor);
   return (
     <main className="flex min-h-screen items-center justify-between">
-      <NavbarSimpleColored />
      {
        currentUser?.username &&
       //  @ts-ignore
-      <Walkthrough open={isModalOpened} />
+      <Walkthrough open={isModalOpened} close={()=>toggleModal(false)} />
      } 
       <div>test</div>
     </main>
   );
 }
 
-export default withAuth(Home);
+export default  withAuth(withApplicationShell(Home));

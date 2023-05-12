@@ -12,6 +12,7 @@ import UserButton from "../UserButton";
 import { useAppSelector } from "@/hooks/redux";
 import { CalendarDaysIcon, DocumentCheckIcon, BeakerIcon, ChatBubbleLeftEllipsisIcon, Cog8ToothIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline'
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 const useStyles = createStyles((theme) => ({
   navbar: {
@@ -110,20 +111,16 @@ export function NavbarSimpleColored() {
   const profile = useAppSelector(state=>state.firebase.profile)
 
   const links = data.map((item) => (
-    <a
+    <Link
       className={cx(classes.link, {
         [classes.linkActive]: item.label === active,
       }, 'transition-all flex justify-center items-center sm:block')}
       href={item.link}
       key={item.label}
-      onClick={(event) => {
-        event.preventDefault();
-        setActive(item.label);
-      }}
     >
       <span className="sm:hidden">{item.icon}</span>
       <span className="hidden sm:inline">{item.label}</span>
-    </a>
+    </Link>
   ));
 
   return (

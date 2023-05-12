@@ -59,7 +59,7 @@ const RegisterForm = (props: Props) => {
             firebase.createUser({
                 email: form.values.email,
                 password: form.values.password,
-            }, { username: form.values.name, email: form.values.email })
+            }, { username: form.values.name, email: form.values.email, isDoctor: false })
       })} className='mt-5'>
         <Stack>
             <TextInput

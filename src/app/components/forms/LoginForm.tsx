@@ -23,9 +23,11 @@ import { firebaseInstance } from '@/app/store/provider';
 import useAuth from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 
-type Props = {}
+type Props = {
+  forDoc?: boolean
+}
 
-const LoginForm = (props: Props) => {
+const LoginForm = ({forDoc, ...props}: Props) => {
     const auth = useAuth();
     const router = useRouter();
     const firebase = useFirebase();

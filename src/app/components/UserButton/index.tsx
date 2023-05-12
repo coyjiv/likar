@@ -1,7 +1,7 @@
 import { useAppSelector } from '@/hooks/redux'
 import { Avatar } from '@mantine/core'
 import Link from 'next/link'
-import React from 'react'
+import React, { memo } from 'react'
 import { ChevronRightIcon } from '../icons'
 
 type Props = {
@@ -23,4 +23,4 @@ const UserButton = ({ image, name, email }: Props) => {
   )
 }
 
-export default UserButton
+export default memo(UserButton)

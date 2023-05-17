@@ -24,7 +24,8 @@ const rootReducer = combineReducers({
         { key: 'firestoreState', storage, stateReconciler: hardSet },
         firestoreReducer
       )
-  })
+      ,
+    })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 

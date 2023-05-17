@@ -103,7 +103,6 @@ const data = [
 
 export function NavbarSimpleColored() {
   const pathname = usePathname();
-  console.log(pathname);
   
   const { classes, cx } = useStyles();
   const [active, setActive] = useState(data.find(item=>item.link===pathname)?.label ?? '');

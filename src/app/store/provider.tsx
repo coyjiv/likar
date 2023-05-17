@@ -10,6 +10,9 @@ import 'firebase/compat/storage'
 import { createFirestoreInstance } from 'redux-firestore'
 import { getAuth } from 'firebase/auth'
 import { PersistGate } from 'redux-persist/integration/react'
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify'
+import ErrorBoundary from '../components/ErrorBoundary'
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -25,6 +28,9 @@ const firebaseConfig = {
 const rrfConfig = {
   userProfile: 'users',
   useFirestoreForProfile: true,
+  profileParamsToPopulate: [
+    { child: 'assignedDoctor', root: 'doctors' } // object notation
+  ]
 }
 
 // Initialize Firebase
@@ -40,7 +46,7 @@ const rrfProps = {
   dispatch: store.dispatch,
   createFirestoreInstance,
   auth,
-  storage
+  storage,
 }
 
 export function Providers({ children }: any) {
@@ -48,7 +54,10 @@ export function Providers({ children }: any) {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <ReactReduxFirebaseProvider {...rrfProps}>
+          <ErrorBoundary>
           {children}
+          </ErrorBoundary>
+          <ToastContainer />
         </ReactReduxFirebaseProvider>
       </PersistGate>
     </Provider>

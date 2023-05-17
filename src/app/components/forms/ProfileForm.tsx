@@ -32,7 +32,7 @@ const ProfileForm = (props: Props) => {
     initialValues: {
       firstName: profile.firstName,
       lastName: profile.lastName,
-      middleName: profile.middleName,
+      middleName: profile.middleName??'',
       placeOfResidence: profile.placeOfResidence,
       email: profile.email,
       dOB: profile.dOB,

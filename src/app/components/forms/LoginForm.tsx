@@ -87,7 +87,7 @@ const LoginForm = ({forDoc, ...props}: Props) => {
         </Stack>
 
         <Group position="apart" mt="xl">
-          <Link className='text-sm font-medium text-slate-500 border-b' href={'/register'}>
+          <Link className='text-sm font-medium text-slate-500 border-b' href={forDoc?'/doc/register':'/register'}>
             Зареєструватися
             </Link>
           <Button type="submit" radius="xl" className='text-black hover:text-white transition-all'>

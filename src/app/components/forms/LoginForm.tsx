@@ -1,5 +1,5 @@
 'use client';
-
+import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
 import React, { use, useEffect } from 'react'
 import { useToggle, upperFirst } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
@@ -55,6 +55,7 @@ const LoginForm = ({forDoc, ...props}: Props) => {
 
   return (
     <Paper radius="md" p="xl" className='max-h-[400px] max-w-[80%] sm:w-full sm:mx-20 lg:mx-40 lg:max-w-lg' withBorder {...props}>
+      <Link className='absolute top-5 right-10 flex items-center text-white gap-2' href={forDoc?"/login":"/doc/login"}>{forDoc?"До панелі пацієнта":"До панелі лікаря"}<ArrowRightOnRectangleIcon className='w-4 h-4 text-white'/></Link>
       <Text size="lg" weight={500}>
         Вітаємо, щоб продовжити увійдіть у систему
       </Text>

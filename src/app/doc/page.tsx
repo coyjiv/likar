@@ -1,20 +1,18 @@
-"use client";
+'use client'
 
-import { useAppSelector } from "@/hooks/redux";
-import { useState } from "react";
-import withApplicationShell from "../components/AppShell";
-import withDocAuth from "@/hooks/withDocAuth";
+import { useAppSelector } from '@/hooks/redux'
+import { useState } from 'react'
+import withApplicationShell from '../components/AppShell'
+import withDocAuth from '@/hooks/withDocAuth'
+import Greeting from '../components/Greeting/Greeting'
 
 function Home() {
-  const currentUser = useAppSelector((state) => state.firebase.profile);
-  const [isModalOpened, toggleModal] = useState(
-    Boolean(!currentUser.assignedDoctor)
-  );
+  // @ts-ignore
+  const currentUser = useAppSelector((state) => state.firebase.profile)
+
   return (
-    <main className="flex min-h-screen items-center justify-between">
-      <div>Вітаємо, {currentUser?.firstName}</div>
-    </main>
-  );
+    <Greeting currentUser={currentUser}/>
+  )
 }
 
-export default  withDocAuth(withApplicationShell(Home));
+export default withDocAuth(withApplicationShell(Home))

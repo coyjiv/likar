@@ -50,15 +50,20 @@ const RegisterForm = ({ forDoc }: Props) => {
 
   useEffect(() => {
     if (auth?.uid) {
-      router.push('/')
+      if(forDoc && auth.currentUser?.emailVerified){
+        router.push('/doc')
+      }
+      else if(!forDoc){
+        router.push('/')
+      }
     }
-  }, [auth, router])
+  }, [auth, forDoc, router])
 
   return (
     <Paper
       radius='md'
       p='xl'
-      className='max-h-[400px] sm:w-full sm:mx-20 lg:mx-40 lg:max-w-lg'
+      className={`${forDoc? 'max-h-[500px]' :'max-h-[400px]'} sm:w-full sm:mx-20 lg:mx-40 lg:max-w-lg`}
       withBorder
     >
       <Text size='lg' weight={500}>

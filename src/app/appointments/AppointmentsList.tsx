@@ -1,7 +1,7 @@
-import { IAppointment } from '@/types'
-import { Button } from '@mantine/core'
-import React from 'react'
-import AppointmentItem from './AppointmentItem'
+import { IAppointment } from "@/types";
+import { Button } from "@mantine/core";
+import React from "react";
+import AppointmentItem from "./AppointmentItem";
 
 type Props = {
   appointments: IAppointment[] | []
@@ -31,7 +31,7 @@ const AppointmentsList = ({ appointments, setCreationMode, forDoc }: Props) => {
         </Button>}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default AppointmentsList
+export default AppointmentsList;

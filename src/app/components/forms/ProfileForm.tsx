@@ -12,9 +12,11 @@ import { RootState } from '@/app/store'
 import { useAppSelector } from '@/hooks/redux'
 import { getAuth } from 'firebase/auth'
 
-type Props = {}
+type Props = {
+  forDoc?: boolean
+}
 
-const ProfileForm = (props: Props) => {
+const ProfileForm = ({ forDoc }: Props) => {
   const firestore = useFirestore()
   const firebase = useFirebase()
   const auth = getAuth()
@@ -28,18 +30,31 @@ const ProfileForm = (props: Props) => {
   const doctorsArray = useMemo(() => Object.values(doctors || {}), [doctors])
   const fileInputRef = React.useRef<HTMLInputElement>(null)
   const [file, setFile] = useState<File>()
-  const form = useForm({
-    initialValues: {
-      firstName: profile.firstName,
-      lastName: profile.lastName,
-      middleName: profile.middleName??'',
-      placeOfResidence: profile.placeOfResidence,
-      email: profile.email,
-      dOB: profile.dOB,
-      assignedDoctor: profile.assignedDoctor,
-    },
-  })
-
+  const form = useForm(
+    !forDoc
+      ? {
+          initialValues: {
+            firstName: profile.firstName,
+            lastName: profile.lastName,
+            middleName: profile.middleName ?? '',
+            placeOfResidence: profile.placeOfResidence,
+            email: profile.email,
+            dOB: profile.dOB,
+            assignedDoctor: profile.assignedDoctor,
+          },
+        }
+      : {
+          initialValues: {
+            firstName: profile.firstName,
+            lastName: profile.lastName,
+            middleName: profile.middleName,
+            placeOfWork: profile.placeOfWork,
+            phoneNumber: profile.phoneNumber,
+            email: profile.email,
+            dOB: profile.dOB,
+          },
+        }
+  )
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -86,7 +101,7 @@ const ProfileForm = (props: Props) => {
                 htmlFor='photo'
                 className='block text-sm font-medium leading-6 text-gray-900'
               >
-                Аватар
+                {!forDoc ? 'Аватар' : 'Світлина'}
               </label>
               <div className='mt-2 sm:col-span-2 sm:mt-0'>
                 <div className='flex items-center gap-x-3'>
@@ -211,7 +226,6 @@ const ProfileForm = (props: Props) => {
                 <TextInput
                   type='date'
                   id='dOB'
-                  withAsterisk
                   radius={'md'}
                   placeholder=''
                   {...form.getInputProps('dOB')}
@@ -239,57 +253,94 @@ const ProfileForm = (props: Props) => {
               </div>
             </div>
 
-            <div className=' sm:grid sm:grid-cols-3 xl:grid-cols-4 sm:items-start sm:gap-4 sm:py-6'>
-              <label
-                htmlFor='assignedDoctor'
-                className='block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5'
-              >
-                Призначений лікар
-              </label>
-              <div className='mt-2 sm:col-span-2 sm:mt-0'>
-                <Select
-                  {...form.getInputProps('assignedDoctor')}
-                  withAsterisk
-                  value={form.values.assignedDoctor}
-                  placeholder='Почніть вводити ФІО лікаря щоб знайти його в базі даних'
-                  data={doctorsArray.map(
-                    (doctor: any, i) => ({
-                      value: doctor.id,
-                      label: `${doctor.lastName} ${doctor.firstName} ${doctor.middleName}`,
-                    }),
-                    []
-                  )}
-                  searchable
-                  nothingFound='Нікого не знайдено'
-                  maxDropdownHeight={280}
-                />
+            {forDoc && (
+              <div className=' sm:grid sm:grid-cols-3 xl:grid-cols-4 sm:items-start sm:gap-4 sm:py-6'>
+                <label
+                  htmlFor='phoneNumber'
+                  className='block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5'
+                >
+                  Номер телефону
+                </label>
+                <div className='mt-2 sm:col-span-2 sm:mt-0'>
+                  <TextInput
+                    id='phoneNumber'
+                    disabled
+                    {...form.getInputProps('phoneNumber')}
+                    radius='md'
+                  />
+                </div>
               </div>
-            </div>
+            )}
 
-            <div className=' sm:grid sm:grid-cols-3 xl:grid-cols-4 sm:items-start sm:gap-4 sm:py-6'>
-              <label
-                htmlFor='street-address'
-                className='block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5'
-              >
-                Місце проживання
-              </label>
-              <div className='mt-2 sm:col-span-2 sm:mt-0'>
-                <TextInput
-                  value={form.values.placeOfResidence}
-                  onChange={(event) =>
-                    form.setFieldValue(
-                      'placeOfResidence',
-                      event.currentTarget.value
-                    )
-                  }
-                  error={
-                    form.errors.placeOfResidence &&
-                    'Неправильне місце проживання'
-                  }
-                  radius='md'
-                />
+            {!forDoc && (
+              <div className=' sm:grid sm:grid-cols-3 xl:grid-cols-4 sm:items-start sm:gap-4 sm:py-6'>
+                <label
+                  htmlFor='assignedDoctor'
+                  className='block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5'
+                >
+                  Призначений лікар
+                </label>
+                <div className='mt-2 sm:col-span-2 sm:mt-0'>
+                  <Select
+                    {...form.getInputProps('assignedDoctor')}
+                    value={form.values.assignedDoctor}
+                    placeholder='Почніть вводити ФІО лікаря щоб знайти його в базі даних'
+                    data={doctorsArray.map(
+                      (doctor: any, i) => ({
+                        value: doctor.id,
+                        label: `${doctor.lastName} ${doctor.firstName} ${doctor.middleName}`,
+                      }),
+                      []
+                    )}
+                    searchable
+                    nothingFound='Нікого не знайдено'
+                    maxDropdownHeight={280}
+                  />
+                </div>
               </div>
-            </div>
+            )}
+
+            {!forDoc ? (
+              <div className=' sm:grid sm:grid-cols-3 xl:grid-cols-4 sm:items-start sm:gap-4 sm:py-6'>
+                <label
+                  htmlFor='street-address'
+                  className='block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5'
+                >
+                  Місце проживання
+                </label>
+                <div className='mt-2 sm:col-span-2 sm:mt-0'>
+                  <TextInput
+                    value={form.values.placeOfResidence}
+                    onChange={(event) =>
+                      form.setFieldValue(
+                        'placeOfResidence',
+                        event.currentTarget.value
+                      )
+                    }
+                    error={
+                      form.errors.placeOfResidence &&
+                      'Неправильне місце проживання'
+                    }
+                    radius='md'
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className=' sm:grid sm:grid-cols-3 xl:grid-cols-4 sm:items-start sm:gap-4 sm:py-6'>
+                <label
+                  htmlFor='street-address'
+                  className='block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5'
+                >
+                  Місце роботи
+                </label>
+                <div className='mt-2 sm:col-span-2 sm:mt-0'>
+                  <TextInput
+                    {...form.getInputProps('placeOfWork')}
+                    radius='md'
+                  />
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

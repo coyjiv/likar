@@ -101,6 +101,13 @@ const data = [
   // { link: '/settings', label: 'Налаштування', icon: <Cog8ToothIcon className="w-4" /> },
 ];
 
+const doctorsData = [
+  { link: '/doc/appointments', label: 'Ваші візити', icon: <CalendarDaysIcon className="w-4"/> },
+  { link: '/doc/recipes', label: 'Виписати направлення', icon: <DocumentCheckIcon className="w-4"/> },
+  { link: '/doc/lab-results', label: 'Оформити результат аналізів', icon: <BeakerIcon className="w-4"/> },
+  { link: '/doc/chats', label: 'Чати', icon: <ChatBubbleLeftEllipsisIcon className="w-4" /> },
+]
+
 export function NavbarSimpleColored() {
   const pathname = usePathname();
   
@@ -109,7 +116,9 @@ export function NavbarSimpleColored() {
   //@ts-ignore
   const profile = useAppSelector(state=>state.firebase.profile)
 
-  const links = data.map((item) => (
+  const properData = profile?.isDoctor ? doctorsData : data;
+
+  const links = properData.map((item) => (
     <Link
       className={cx(classes.link, {
         [classes.linkActive]: item.label === active,

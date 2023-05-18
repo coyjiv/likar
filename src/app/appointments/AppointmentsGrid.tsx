@@ -18,23 +18,17 @@ import { RootState } from '../store'
 import AppointmentsList from './AppointmentsList'
 import CreateAppointment from './CreateAppointment'
 
-type Props = {}
 
-const PRIMARY_COL_HEIGHT = rem(300)
 
 const uid = getAuth()?.currentUser?.uid
 
-const AppointmentsGrid = (props: Props) => {
+const AppointmentsGrid = () => {
   const theme = useMantineTheme()
+  // @ts-ignore 
   const user = useAppSelector(state=>state.firebase.auth)
-  const SECONDARY_COL_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} / 2 - ${theme.spacing.md} / 2)`
-  const appointmentsData = useAppSelector(state=>state.firestore.data.appointments)
   const [loading, setLoading] = useState(true)
   const [creationMode, setCreationMode] = useState(false)
   const appointments = useAppointments(user.uid)
-
-
-  console.log(appointments);
   
 
   const renderExpression = creationMode ? (

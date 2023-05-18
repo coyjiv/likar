@@ -46,8 +46,11 @@ const LoginForm = ({forDoc, ...props}: Props) => {
     });
 
     useEffect(() => {
-        if (auth?.uid) {
+        if (auth?.uid && !auth?.isDoctor) {
             router.push('/')
+        }
+        else if (auth?.uid && auth?.isDoctor) {
+            router.push('/doc')
         }
         console.log(auth);
         

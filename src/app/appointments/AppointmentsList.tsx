@@ -7,9 +7,10 @@ type Props = {
   appointments: IAppointment[] | []
   setCreationMode: (value: boolean) => void
   creationMode: boolean
+  forDoc?: boolean
 }
 
-const AppointmentsList = ({ appointments, setCreationMode }: Props) => {
+const AppointmentsList = ({ appointments, setCreationMode, forDoc }: Props) => {
   
   return (
     <div>
@@ -19,15 +20,15 @@ const AppointmentsList = ({ appointments, setCreationMode }: Props) => {
             <AppointmentItem
               key={index}
               appointment={appointment}
-
+              forDoc={forDoc}
             />
           ))}
       </>
       <div className='flex gap-3 items-center mt-5'>
-        {appointments.length===0 ? <p className='font-medium'>Ви не маєте жодного запису</p>: <p className='font-medium'>Створити додатковий?</p>}
-        <Button variant={'default'} onClick={() => setCreationMode(true)}>
+        {appointments.length===0 && !forDoc ? <p className='font-medium'>Ви не маєте жодного запису</p>: !forDoc && <p className='font-medium'>Створити додатковий?</p>}
+        {!forDoc && <Button variant={'default'} onClick={() => setCreationMode(true)}>
           Створити
-        </Button>
+        </Button>}
       </div>
     </div>
   )

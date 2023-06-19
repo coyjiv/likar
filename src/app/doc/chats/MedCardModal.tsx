@@ -34,7 +34,7 @@ const MedCardModal = ({ opened, close, userData }: Props) => {
   })
 
   return (
-    <Modal opened={opened} onClose={close} title='Мед карта'>
+    <Modal opened={opened} onClose={close} title='Електронна медична карта'>
       <form
         onSubmit={form.onSubmit((values) => {
           firestore.update(

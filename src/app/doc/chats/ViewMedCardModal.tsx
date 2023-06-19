@@ -14,7 +14,7 @@ type Props = {
 const ViewMedCardModal = ({ opened, close, userData }: Props) => {
 
   return (
-    <Modal opened={opened} onClose={close} title='Мед карта'>
+    <Modal opened={opened} onClose={close} title='Електронна медична карта'>
         <div>
             <div className='flex items-center space-x-2'>
                 <span>Ім'я: </span>

@@ -130,9 +130,9 @@ const ChatsPageDoc = (props: Props) => {
 
                 <Menu.Dropdown>
                   <Menu.Item onClick={() => setModalOpened(true)}>
-                    Заповнити мед.карту
+                    Заповнити ЕМК
                   </Menu.Item>
-                  <Menu.Item disabled={!choosenPatient?.medCard} onClick={() => setModalViewOpened(true)}>Переглянути мед.карту</Menu.Item>
+                  <Menu.Item disabled={!choosenPatient?.medCard} onClick={() => setModalViewOpened(true)}>Переглянути ЕМК</Menu.Item>
                 </Menu.Dropdown>
               </Menu>
               <MedCardModal

@@ -12,8 +12,8 @@ const ChatMenu = (props: Props) => {
         </Menu.Target>
   
         <Menu.Dropdown>
-          <Menu.Item>Заповнити мед.карту</Menu.Item>
-          <Menu.Item disabled>Переглянути мед.карту</Menu.Item>
+          <Menu.Item>Заповнити ЕМК</Menu.Item>
+          <Menu.Item disabled>Переглянути ЕМК</Menu.Item>
         </Menu.Dropdown>
       </Menu>
   )

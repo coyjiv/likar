@@ -47,32 +47,32 @@ const MedCardModal = ({ opened, close, userData }: Props) => {
         })}
       >
         <TextInput
-          label='First name'
-          placeholder='Your first name'
+          label="Ім'я"
+          placeholder=''
           required
           {...form.getInputProps('firstName')}
         />
         <TextInput
-          label='Last name'
-          placeholder='Your last name'
+          label='Прізвище'
+          placeholder=''
           required
           {...form.getInputProps('lastName')}
         />
         <TextInput
-          label='Middle name'
-          placeholder='Your middle name'
+          label='По батькові'
+          placeholder=''
           required
           {...form.getInputProps('middleName')}
         />
         <TextInput
-          label='Phone number'
-          placeholder='Your phone number'
+          label='Номер телефону'
+          placeholder=''
           required
           {...form.getInputProps('phoneNumber')}
         />
         <TextInput
-          label='Card number'
-          placeholder='Your card number'
+          label='Номер карти'
+          placeholder=''
           required
           {...form.getInputProps('cardNumber')}
         />

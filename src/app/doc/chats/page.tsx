@@ -88,31 +88,31 @@ const ChatsPageDoc = (props: Props) => {
               {search.length > 0
                 ? filteredPatients
                 : patients.map((patient) => (
-                    <li
-                      onClick={() => setChoosenPatient(patient)}
-                      key={patient.id}
-                      className='flex items-center space-x-2'
-                    >
-                      <Image
-                        width={30}
-                        height={30}
-                        src={patient.avatarUrl}
-                        alt=''
-                        className='w-10 h-10 rounded-full'
-                      />
-                      <span>
-                        {patient?.lastName +
-                          ' ' +
-                          patient?.firstName +
-                          ' ' +
-                          patient?.middleName}
-                      </span>
-                    </li>
-                  ))}
+                  <li
+                    onClick={() => setChoosenPatient(patient)}
+                    key={patient.id}
+                    className='flex items-center space-x-2'
+                  >
+                    <Image
+                      width={30}
+                      height={30}
+                      src={patient.avatarUrl}
+                      alt=''
+                      className='w-10 h-10 rounded-full'
+                    />
+                    <span>
+                      {patient?.lastName +
+                        ' ' +
+                        patient?.firstName +
+                        ' ' +
+                        patient?.middleName}
+                    </span>
+                  </li>
+                ))}
             </ul>
           </div>
           {/* Чат з пацієнтом  */}
-          <div className='w-2/3 border-l-4 border-sky-800/20 bg-sky-300 h-[95vh] px-3 rounded-lg rounded-tl-none rounded-bl-none'>
+          <div className='w-2/3 border-l-4 border-sky-800/20 bg-sky-300 h-[95vh] px-3 rounded-lg rounded-tl-none relative rounded-bl-none'>
             <div className='flex justify-between items-center'>
               <h1 className='text-xl my-10 font-medium text-white'>
                 Чат з пацієнтом
@@ -122,7 +122,7 @@ const ChatsPageDoc = (props: Props) => {
                   <Button
                     disabled={!choosenPatient}
                     variant={'default'}
-                    className='flex justify-center'
+                    className='flex justify-center disabled:opacity-50 bg-white'
                   >
                     <EllipsisVerticalIcon className='w-5 h-5  text-black' />
                   </Button>
@@ -140,7 +140,7 @@ const ChatsPageDoc = (props: Props) => {
                 close={() => setModalOpened(false)}
                 userData={choosenPatient}
               />
-              <ViewMedCardModal opened={modalViewOpened} close={()=>setModalViewOpened(false)} userData={choosenPatient?.medCard} />
+              <ViewMedCardModal opened={modalViewOpened} close={() => setModalViewOpened(false)} userData={choosenPatient?.medCard} />
             </div>
             {choosenPatient ? (
               <>
@@ -162,7 +162,7 @@ const ChatsPageDoc = (props: Props) => {
                     </span>
                   </div>
                 </div>
-                <div className='min-h-[95vh] bg-sky-300 rounded-lg'>
+                <div className='h-full mt-4 max-h-[66vh] pb-20 overflow-y-auto bg-sky-300 rounded-lg'>
                   {relatedMessages.length > 0 ? (
                     <>
                       {relatedMessages.reverse().map((message: any) => {
@@ -189,10 +189,10 @@ const ChatsPageDoc = (props: Props) => {
               <>
               </>
             )}
-            <div className='fixed bottom-5 flex items-center'>
-        <Textarea value={message} onChange={e=>setMessage(e.target.value)} autosize w={'40vw'} className='-translate-x-20' placeholder='Введіть повідомлення' />
-        <Button className='-translate-x-5' disabled={message.length===0 || !choosenPatient} onClick={()=>{sendMessage(userUID, choosenPatient.id, message); setMessage('')}} variant='light'>Відправити</Button>
-      </div>
+            <div className='absolute bottom-5 flex gap-5 items-center'>
+              <Textarea value={message} onChange={e => setMessage(e.target.value)} autosize w={'40vw'} className='' placeholder='Введіть повідомлення' />
+              <Button className='' disabled={message.length === 0 || !choosenPatient} onClick={() => { sendMessage(userUID, choosenPatient.id, message); setMessage('') }} variant='light'>Відправити</Button>
+            </div>
           </div>
         </div>
       ) : (
